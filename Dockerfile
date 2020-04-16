@@ -60,7 +60,15 @@ RUN curl -SL $FD_URL | tar -xz \
 RUN echo 'alias fd="python3 ${BASE_DIR}/fast-downward/fast-downward.py"' >> ~/.bashrc
 
 
-
+#################################
+# Download and Install K*
+#################################
+ENV KSTAR_URL=https://github.com/ctpelok77/kstar/archive/master.tar.gz
+RUN curl -SL $KSTAR_URL | tar -xz \
+        && mv kstar-* kstar \
+	&& cd kstar \
+	&& python3 ./build.py release64 
+RUN echo 'alias kstar="python3 ${BASE_DIR}/kstar/fast-downward.py --build release64"' >> ~/.bashrc
 
 # default command to execute when container starts
 CMD /bin/bash
