@@ -6,6 +6,8 @@ LABEL maintainer="Christian Muise (christian.muise@queensu.ca)"
 # update the apt package manager
 RUN apt-get update
 RUN apt-get install -y software-properties-common
+#Honestly just easier to add universe and let it give us access to wider PPAs
+RUN add-apt-repository universe
 RUN apt-get update && apt-get -y install locales
 
 # Install required packages
@@ -21,7 +23,9 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
         git \
 	cmake \
 	unzip \
-	g++-multilib
+	g++-multilib \
+	wget
+
 
 # install python and related
 RUN apt-get install -y python3 python3-dev python3-pip python3-venv
@@ -58,6 +62,15 @@ RUN curl -SL $FD_URL | tar -xz \
 	&& cd fast-downward \
 	&& python3 ./build.py -j 2
 RUN echo 'alias fd="python3 ${BASE_DIR}/fast-downward/fast-downward.py"' >> ~/.bashrc
+
+####################################
+# Download and install MetricFF
+####################################
+RUN wget https://fai.cs.uni-saarland.de/hoffmann/ff/Metric-FF.tgz \
+	&& tar -xvzf Metric-FF.tgz \
+	&& cd /Metric-FF \
+	&& make ff 
+RUN echo 'alias ff="python3 ${BASE_DIR}/Metric-FF/metricff' >> ~/.bashrc
 
 
 
